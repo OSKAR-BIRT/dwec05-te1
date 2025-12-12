@@ -1,16 +1,18 @@
 <div class="container">
 
-    <h1 class="text-center mt-4 mb-4 border border-primary rounded-4 p-3 bg-primary text-warning">FORMULARIO DE CONFIGURACION DEL JUEGO DE ADIVINACIÓN</h1>
+    <h1 class="text-center mt-4 mb-4 border border-primary rounded-4 p-3 bg-primary text-warning">FORMULARIO DE
+        CONFIGURACION DEL JUEGO DE ADIVINACIÓN</h1>
 
     <div class="ms-5">
 
         <div class="mb-3 row">
             <label for="nombre" class="col-sm-2 col-form-label">Nombre y apellidos: </label>
             <div class="col-sm-7">
-                <input type="text" class="form-control border border-primary" id="nombre" value="" (blur) = "tratarBlur($event)" #nombre>
+                <input type="text" class="form-control border border-primary" id="nombre" value=""
+                    (blur)="tratarBlur($event)" #nombre [disabled]="deshabilitarNombre">
             </div>
             <label class="col-sm-3 col-form-label text-danger">
-                <i class="bi bi-check-circle-fill text-success" [ngClass] = "{'d-none': !nombreOK}"></i>
+                <i class="bi bi-check-circle-fill text-success" [ngClass]="{'d-none': !nombreOK}"></i>
                 {{feedbackNombre}}
             </label>
         </div>
@@ -18,10 +20,11 @@
         <div class="mb-3 row">
             <label for="rango" class="col-sm-2 col-form-label">Rango máximo: </label>
             <div class="col-sm-1">
-                <input type="number" class="form-control border border-primary" id="rango" value="rango" placeholder="" min="0" (blur) = "tratarBlur($event)">
+                <input type="number" class="form-control border border-primary" id="rango" value="rango" placeholder=""
+                    min="0" (blur)="tratarBlur($event)" [disabled]="deshabilitarRango">
             </div>
             <label class="col-sm-3 col-form-label text-danger">
-                <i class="bi bi-check-circle-fill text-success" [ngClass] = "{'d-none': !rangoOK}"></i>
+                <i class="bi bi-check-circle-fill text-success" [ngClass]="{'d-none': !rangoOK}"></i>
                 {{feedbackRango}}
             </label>
         </div>
@@ -29,20 +32,49 @@
         <div class="mb-3 row">
             <label for="intentos" class="col-sm-2 col-form-label">Número max. de intentos: </label>
             <div class="col-sm-1">
-                <input type="number" class="form-control border border-primary" id="intentos" value="rango" placeholder="" min="1" (blur) = "tratarBlur($event)">
+                <input type="number" class="form-control border border-primary" id="intentos" value="rango"
+                    placeholder="" min="1" (blur)="tratarBlur($event)" [disabled]="deshabilitarIntentos">
             </div>
             <label class="col-sm-3 col-form-label text-danger">
-                <i class="bi bi-check-circle-fill text-success" [ngClass] = "{'d-none': !intentosOK}"></i>
+                <i class="bi bi-check-circle-fill text-success" [ngClass]="{'d-none': !intentosOK}"></i>
                 {{feedbackIntentos}}
             </label>
         </div>
 
         <div class="mb-3 ms-5 row">
             <button type="button" class="btn col-sm-2 border border-secondary" (click)="iniciarJuego()"
-                    [disabled] = "deshabilitarBoton" [ngClass] = "{'btn-success': !deshabilitarBoton}">
+                [disabled]="deshabilitarIniciarJuego" [ngClass]="{'btn-success': !deshabilitarIniciarJuego}">
                 INICIAR JUEGO
             </button>
         </div>
+
+    </div>
+
+    <div class="ms-5 me-5 row" [ngClass]="{'d-none': !estamosEnFaseJuego}">
+        <hr>
+        <h2 class="text-center mb-3 text-primary text-decoration-underline">BIEN VENIDO AL JUEGO DE ADIVINACION,
+            {{this.contenidoNombre}}</h2>
+        <p>Tienes que adivinar un número entre el 1 y el {{this.contenidoRango}}. Tienes un máximo de
+            {{this.contenidoIntentos}} intentos.</p>
+        <p>Escribe un número en el cuadro y pulsa el botón de comprobar. Te quedan {{intentosRestantes}} intentos.</p>
+
+        <div class="mb-3 row">
+            <label class="col-sm-2 col-form-label text-end">Tu pronóstico: </label>
+            <div class="col-sm-1">
+                <input type="number" class="form-control border border-primary" id="pronostico" placeholder="" min="1" [(ngModel)] = "this.numeroSugerido">
+            </div>
+            <button type="button" class="btn col-sm-2 border border-secondary btn-success" (click)="comprobarJuego()">
+                COMPROBAR
+            </button>
+        </div>
+
+        <div class="mb-3 ms-5 row">
+            <label class="col-sm-5 col-form-label text-dark text-center bg-light">
+                {{feedbackJuego}}
+            </label>
+        </div>
+
+        <hr>
 
     </div>
 
