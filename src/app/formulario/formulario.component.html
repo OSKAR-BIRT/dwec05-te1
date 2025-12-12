@@ -9,7 +9,7 @@
             <label for="nombre" class="col-sm-2 col-form-label">Nombre y apellidos: </label>
             <div class="col-sm-7">
                 <input type="text" class="form-control border border-primary" id="nombre" value=""
-                    (blur)="tratarBlur($event)" #nombre [disabled]="deshabilitarNombre">
+                    (blur)="tratarBlur($event)" [disabled]="deshabilitarNombre" [(ngModel)] = "this.contenidoNombre">
             </div>
             <label class="col-sm-3 col-form-label text-danger">
                 <i class="bi bi-check-circle-fill text-success" [ngClass]="{'d-none': !nombreOK}"></i>
@@ -21,7 +21,7 @@
             <label for="rango" class="col-sm-2 col-form-label">Rango máximo: </label>
             <div class="col-sm-1">
                 <input type="number" class="form-control border border-primary" id="rango" value="rango" placeholder=""
-                    min="0" (blur)="tratarBlur($event)" [disabled]="deshabilitarRango">
+                    min="0" (blur)="tratarBlur($event)" [disabled]="deshabilitarRango" [(ngModel)] = "this.contenidoRango">
             </div>
             <label class="col-sm-3 col-form-label text-danger">
                 <i class="bi bi-check-circle-fill text-success" [ngClass]="{'d-none': !rangoOK}"></i>
@@ -33,7 +33,7 @@
             <label for="intentos" class="col-sm-2 col-form-label">Número max. de intentos: </label>
             <div class="col-sm-1">
                 <input type="number" class="form-control border border-primary" id="intentos" value="rango"
-                    placeholder="" min="1" (blur)="tratarBlur($event)" [disabled]="deshabilitarIntentos">
+                    placeholder="" min="1" (blur)="tratarBlur($event)" [disabled]="deshabilitarIntentos" [(ngModel)] = "this.contenidoIntentos">
             </div>
             <label class="col-sm-3 col-form-label text-danger">
                 <i class="bi bi-check-circle-fill text-success" [ngClass]="{'d-none': !intentosOK}"></i>
@@ -52,19 +52,25 @@
 
     <div class="ms-5 me-5 row" [ngClass]="{'d-none': !estamosEnFaseJuego}">
         <hr>
-        <h2 class="text-center mb-3 text-primary text-decoration-underline">BIEN VENIDO AL JUEGO DE ADIVINACION,
-            {{this.contenidoNombre}}</h2>
+        <h2 class="text-center mb-3 text-primary text-decoration-underline">ONGI ETORRI {{this.contenidoNombre}}</h2>
         <p>Tienes que adivinar un número entre el 1 y el {{this.contenidoRango}}. Tienes un máximo de
             {{this.contenidoIntentos}} intentos.</p>
         <p>Escribe un número en el cuadro y pulsa el botón de comprobar. Te quedan {{intentosRestantes}} intentos.</p>
 
         <div class="mb-3 row">
             <label class="col-sm-2 col-form-label text-end">Tu pronóstico: </label>
+
             <div class="col-sm-1">
-                <input type="number" class="form-control border border-primary" id="pronostico" placeholder="" min="1" [(ngModel)] = "this.numeroSugerido">
+                <input type="number" class="form-control border border-primary" id="pronostico" placeholder="" min="1" 
+                        [(ngModel)] = "this.numeroSugerido" [disabled]="this.juegoFinalizado">
             </div>
-            <button type="button" class="btn col-sm-2 border border-secondary btn-success" (click)="comprobarJuego()">
+
+            <button type="button" class="btn col-sm-2 border border-secondary btn-primary" (click)="comprobarJuego()" [disabled]="this.juegoFinalizado">
                 COMPROBAR
+            </button>
+
+            <button type="button" class="btn col-sm-2 border border-secondary btn-success ms-5" (click)="reiniciarJuego()" [ngClass]="{'d-none': !this.juegoFinalizado}">
+                VOLVER A JUGAR
             </button>
         </div>
 

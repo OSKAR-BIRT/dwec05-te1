@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { DatosJuego, generarEnteroAleatorio } from '../Modelos/Configuracion';
 
 
@@ -16,9 +16,9 @@ export class FormularioComponent {
   contenidoIntentos: number = 0;
 
   // Atributos con los contenidos de los mensajes de error de cada input
-  public feedbackNombre: string = "El campo nombre no puede estar vacio";
-  public feedbackRango: string = "El rango tiene que ser por lo menos 4"
-  public feedbackIntentos: string = "El número mínimo de intentos es 1"
+  public feedbackNombre: string = "";
+  public feedbackRango: string = ""
+  public feedbackIntentos: string = ""
 
   // Atributos booleanas que controlan si cada elemento del formulario es correcto
   public nombreOK: boolean = false;
@@ -37,6 +37,8 @@ export class FormularioComponent {
   public feedbackJuego: string = "";
   public numeroBuscado: number = 0;
   public numeroSugerido: number = 0;
+  public juegoFinalizado: boolean = false;
+
 
   /************************************************************
    * function tratarBlur
@@ -124,19 +126,58 @@ export class FormularioComponent {
 
   comprobarJuego(): void {
 
-    var juegoFinalizado = false;
 
-    if (this.numeroSugerido < this.numeroBuscado) {
-      this.feedbackJuego = 'En número buscado es mayor.  Inténtalo de nuevo';
-      this.intentosRestantes--;
-    } else if (this.numeroSugerido > this.numeroBuscado) {
-      this.feedbackJuego = 'En número buscado es menor.  Inténtalo de nuevo';
-      this.intentosRestantes--;
-    } else {
-      this.feedbackJuego = 'ACERTASTE, el número buscado era el ' + this.numeroBuscado;
+    if (this.intentosRestantes > 0) {
+      if (this.numeroSugerido > this.numeroBuscado) {
+        this.feedbackJuego = 'Te pasaste. Inténtalo de nuevo';
+        this.intentosRestantes--;
+      } else if (this.numeroSugerido == this.numeroBuscado) {
+        this.juegoFinalizado = true;
+        this.feedbackJuego = 'Has ganado, el número buscado era el ' + this.numeroBuscado;
+      } else if (this.numeroSugerido == this.numeroBuscado - 1) {
+        this.feedbackJuego = 'Caliente. Inténtalo de nuevo';
+        this.intentosRestantes--;
+      } else if (this.numeroSugerido == this.numeroBuscado - 2) {
+        this.feedbackJuego = 'Templado. Inténtalo de nuevo';
+        this.intentosRestantes--;
+      } else {
+        this.feedbackJuego = 'Frio. Inténtalo de nuevo';
+        this.intentosRestantes--;
+      }
+    }
+
+    if (this.intentosRestantes == 0) {
+      // Si entramos en este bloque es porque en el bloque anterior se ha consumido el número de intentos
+      // y no se ha encontrado la solución.
+      this.juegoFinalizado = true;
+      this.feedbackJuego = 'GAME OVER - PERDISTE. El número buscado era el ' + this.numeroBuscado;
     }
 
   }
+
+  reiniciarJuego() : void {
+    
+    this.contenidoNombre = "";
+    this.contenidoRango = 0;
+    this.contenidoIntentos = 0;
+
+    this.nombreOK = false;
+    this.rangoOK = false;
+    this.intentosOK = false;
+
+    this.deshabilitarIniciarJuego = true;
+    this.deshabilitarNombre = false;
+    this.deshabilitarRango = false;
+    this.deshabilitarIntentos = false;
+
+    this.intentosRestantes = 0;
+    this.estamosEnFaseJuego = false;
+    this.feedbackJuego = "";
+    this.numeroBuscado = 0;
+    this.numeroSugerido = 0;
+    this.juegoFinalizado = false;
+  }
+
 
 }
 
